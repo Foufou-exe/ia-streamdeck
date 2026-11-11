@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Foufou-exe/ia-streamdeck/compare/v1.0.0...v1.0.1) (2026-11-11)
+
+
+### Corrections
+
+* corriger les UUID d'actions et la faille de ws ([a447f35](https://github.com/Foufou-exe/ia-streamdeck/commit/a447f35bce11bb709fce1d80a77baa45a31be849))
+
 ## 1.0.0 - 2026-11-11
 
 - Page **ChatGPT** avec sa mascotte bleu-violet et ses 8 touches animées.

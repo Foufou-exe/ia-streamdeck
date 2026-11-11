@@ -1,6 +1,6 @@
 {
   "name": "profil-ia-streamdeck-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Plugin Stream Deck « Profil IA » : touches Prompt IA (Claude / ChatGPT) et molettes Stream Deck+ à grande barre dynamique.",
   "homepage": "https://github.com/Foufou-exe/ia-streamdeck",
