@@ -1,0 +1,20 @@
+{
+  "name": "profil-ia-streamdeck-plugin",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Plugin Stream Deck « Profil IA » : touches Prompt IA (Claude / ChatGPT) et molettes Stream Deck+ à grande barre dynamique.",
+  "homepage": "https://github.com/Foufou-exe/ia-streamdeck",
+  "license": "MIT",
+  "author": "Thibaut Maurras",
+  "scripts": {
+    "build": "node build.js",
+    "pack": "node build.js --pack",
+    "test": "node test/run.js"
+  },
+  "dependencies": {
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0"
+  }
+}

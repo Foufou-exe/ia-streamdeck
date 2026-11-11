@@ -1,0 +1,146 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.foufou-exe.profil-ia",
+  "Name": "Profil IA",
+  "Version": "1.2.0.0",
+  "Author": "Thibaut",
+  "Description": "Touches « Prompt IA » configurables (Claude / ChatGPT) et molettes Stream Deck+ à grande barre dynamique.",
+  "URL": "https://github.com/Foufou-exe/ia-streamdeck",
+  "Icon": "imgs/plugin/icon",
+  "Category": "Profil IA",
+  "CategoryIcon": "imgs/plugin/category",
+  "CodePath": "bin/plugin.js",
+  "Nodejs": {
+    "Version": "20",
+    "Debug": "disabled"
+  },
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.5"
+  },
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Actions": [
+    {
+      "UUID": "com.foufou-exe.profil-ia.prompt",
+      "Name": "Prompt IA",
+      "Tooltip": "Envoie la sélection à Claude ou ChatGPT avec un prompt prêt à l'emploi",
+      "Icon": "imgs/actions/prompt",
+      "Controllers": [
+        "Keypad"
+      ],
+      "PropertyInspectorPath": "ui/prompt.html",
+      "States": [
+        {
+          "Image": "imgs/actions/prompt-key",
+          "ShowTitle": false
+        }
+      ],
+      "SupportedInMultiActions": true
+    },
+    {
+      "UUID": "com.foufou-exe.profil-ia.defiler",
+      "Name": "Défiler (barre XL)",
+      "Tooltip": "Fait défiler la page, la barre montre l'élan",
+      "Icon": "imgs/actions/defiler",
+      "Controllers": [
+        "Encoder"
+      ],
+      "Encoder": {
+        "layout": "layouts/defiler.json",
+        "Icon": "imgs/actions/defiler",
+        "TriggerDescription": {
+          "Rotate": "Défiler haut / bas",
+          "Push": "Vitesse ×1 / ×3",
+          "Touch": "Vitesse ×1 / ×3"
+        }
+      },
+      "States": [
+        {
+          "Image": "imgs/actions/defiler-key"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false
+    },
+    {
+      "UUID": "com.foufou-exe.profil-ia.zoom",
+      "Name": "Zoom (barre XL)",
+      "Tooltip": "Ctrl + molette, niveau affiché de 50 à 200 %",
+      "Icon": "imgs/actions/zoom",
+      "Controllers": [
+        "Encoder"
+      ],
+      "Encoder": {
+        "layout": "layouts/zoom.json",
+        "Icon": "imgs/actions/zoom",
+        "TriggerDescription": {
+          "Rotate": "Zoom avant / arrière",
+          "Push": "Retour à 100 % (Ctrl+0)",
+          "Touch": "Retour à 100 % (Ctrl+0)"
+        }
+      },
+      "States": [
+        {
+          "Image": "imgs/actions/zoom-key"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false
+    },
+    {
+      "UUID": "com.foufou-exe.profil-ia.volume",
+      "Name": "Volume (barre XL)",
+      "Tooltip": "Volume réel de Windows avec grande barre",
+      "Icon": "imgs/actions/volume",
+      "Controllers": [
+        "Encoder"
+      ],
+      "Encoder": {
+        "layout": "layouts/volume.json",
+        "Icon": "imgs/actions/volume",
+        "TriggerDescription": {
+          "Rotate": "Régler le volume",
+          "Push": "Couper / rétablir",
+          "Touch": "Couper / rétablir"
+        }
+      },
+      "States": [
+        {
+          "Image": "imgs/actions/volume-key"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false
+    },
+    {
+      "UUID": "com.foufou-exe.profil-ia.dictee",
+      "Name": "Dictée (barre XL)",
+      "Tooltip": "Lance la saisie vocale Windows (Win+H)",
+      "Icon": "imgs/actions/dictee",
+      "Controllers": [
+        "Encoder"
+      ],
+      "Encoder": {
+        "layout": "layouts/dictee.json",
+        "Icon": "imgs/actions/dictee",
+        "TriggerDescription": {
+          "Rotate": "—",
+          "Push": "Démarrer / arrêter la dictée",
+          "Touch": "Démarrer / arrêter la dictée"
+        }
+      },
+      "States": [
+        {
+          "Image": "imgs/actions/dictee-key"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false
+    }
+  ]
+}

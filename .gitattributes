@@ -1,0 +1,12 @@
+# Fins de ligne normalisées en LF dans le dépôt
+* text=auto eol=lf
+
+# Scripts Windows en CRLF
+*.ps1 text eol=crlf
+
+# Binaires
+*.png binary
+*.gif binary
+*.webp binary
+*.streamDeckPlugin binary
+*.streamDeckProfile binary

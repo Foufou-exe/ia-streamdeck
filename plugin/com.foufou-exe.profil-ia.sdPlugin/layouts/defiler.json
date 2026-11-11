@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+  "id": "com.foufou-exe.profil-ia.layout.defiler",
+  "items": [
+    {
+      "key": "bg",
+      "type": "pixmap",
+      "rect": [
+        0,
+        0,
+        200,
+        100
+      ],
+      "value": "imgs/layouts/bg-defiler.png",
+      "zOrder": 0
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "rect": [
+        66,
+        9,
+        128,
+        24
+      ],
+      "value": "Défiler",
+      "font": {
+        "size": 19,
+        "weight": 700
+      },
+      "color": "#F3F4F6",
+      "alignment": "left",
+      "text-overflow": "ellipsis",
+      "zOrder": 1
+    },
+    {
+      "key": "value",
+      "type": "text",
+      "rect": [
+        66,
+        34,
+        128,
+        20
+      ],
+      "value": "Normal ×1",
+      "font": {
+        "size": 15,
+        "weight": 600
+      },
+      "color": "#C9C1FF",
+      "alignment": "left",
+      "text-overflow": "ellipsis",
+      "zOrder": 1
+    },
+    {
+      "key": "bar",
+      "type": "bar",
+      "rect": [
+        14,
+        64,
+        172,
+        18
+      ],
+      "value": 0,
+      "subtype": 0,
+      "border_w": 0,
+      "bar_bg_c": "#2A2C35",
+      "bar_fill_c": "#8B7CF6",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "zOrder": 1
+    }
+  ]
+}

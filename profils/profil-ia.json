@@ -1,0 +1,37 @@
+{
+  "name": "Profil IA",
+  "device": "20GBD9901",
+  "pages": [
+    {
+      "id": "claude",
+      "name": "Claude",
+      "touches": "claude/touches/avec-texte",
+      "keys": {
+        "0,0": { "image": "01-nouvelle-conv", "action": "website", "url": "claude://claude.ai/new" },
+        "1,0": { "image": "02-explique", "action": "prompt", "preset": "explique", "target": "app", "longTarget": "chatgpt", "send": false },
+        "2,0": { "image": "03-corrige", "action": "prompt", "preset": "corrige", "target": "app", "longTarget": "chatgpt", "send": true },
+        "3,0": { "image": "04-traduis", "action": "prompt", "preset": "traduis", "target": "app", "longTarget": "chatgpt", "send": true },
+        "0,1": { "image": "05-claude-code", "action": "website", "url": "claude://code/new" },
+        "1,1": { "image": "06-resume", "action": "prompt", "preset": "resume", "target": "app", "longTarget": "chatgpt", "send": true },
+        "2,1": { "image": "07-idees", "action": "prompt", "preset": "idees", "target": "app", "longTarget": "chatgpt", "send": false },
+        "3,1": { "image": "08-retour", "action": "next-page" }
+      }
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "touches": "chatgpt/touches/avec-texte",
+      "keys": {
+        "0,0": { "image": "01-nouvelle-conv", "action": "website", "url": "https://chatgpt.com/" },
+        "1,0": { "image": "02-explique", "action": "prompt", "preset": "explique", "target": "chatgpt", "longTarget": "app", "send": false },
+        "2,0": { "image": "03-corrige", "action": "prompt", "preset": "corrige", "target": "chatgpt", "longTarget": "app", "send": true },
+        "3,0": { "image": "04-traduis", "action": "prompt", "preset": "traduis", "target": "chatgpt", "longTarget": "app", "send": true },
+        "0,1": { "image": "05-image", "action": "prompt", "preset": "perso", "prompt": "Génère une image à partir de cette description :", "target": "chatgpt", "longTarget": "app", "send": true },
+        "1,1": { "image": "06-resume", "action": "prompt", "preset": "resume", "target": "chatgpt", "longTarget": "app", "send": true },
+        "2,1": { "image": "07-idees", "action": "prompt", "preset": "idees", "target": "chatgpt", "longTarget": "app", "send": false },
+        "3,1": { "image": "08-retour", "action": "previous-page" }
+      }
+    }
+  ],
+  "dials": ["defiler", "zoom", "volume", "dictee"]
+}

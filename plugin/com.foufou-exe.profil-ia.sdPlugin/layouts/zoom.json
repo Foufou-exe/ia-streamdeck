@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+  "id": "com.foufou-exe.profil-ia.layout.zoom",
+  "items": [
+    {
+      "key": "bg",
+      "type": "pixmap",
+      "rect": [
+        0,
+        0,
+        200,
+        100
+      ],
+      "value": "imgs/layouts/bg-zoom.png",
+      "zOrder": 0
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "rect": [
+        66,
+        9,
+        128,
+        24
+      ],
+      "value": "Zoom",
+      "font": {
+        "size": 19,
+        "weight": 700
+      },
+      "color": "#F3F4F6",
+      "alignment": "left",
+      "text-overflow": "ellipsis",
+      "zOrder": 1
+    },
+    {
+      "key": "value",
+      "type": "text",
+      "rect": [
+        66,
+        34,
+        128,
+        20
+      ],
+      "value": "100 %",
+      "font": {
+        "size": 15,
+        "weight": 600
+      },
+      "color": "#A9D4FB",
+      "alignment": "left",
+      "text-overflow": "ellipsis",
+      "zOrder": 1
+    },
+    {
+      "key": "bar",
+      "type": "bar",
+      "rect": [
+        14,
+        64,
+        172,
+        18
+      ],
+      "value": 50,
+      "subtype": 0,
+      "border_w": 0,
+      "bar_bg_c": "#2A2C35",
+      "bar_fill_c": "#4EA8F5",
+      "range": {
+        "min": 50,
+        "max": 200
+      },
+      "zOrder": 1
+    }
+  ]
+}

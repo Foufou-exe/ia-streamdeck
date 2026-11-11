@@ -1,0 +1,8 @@
+{
+  "explique": { "label": "Explique", "prompt": "Explique-moi ça simplement, comme à un collègue :", "send": false },
+  "resume":   { "label": "Résumé",   "prompt": "Résume ça en 5 points maximum, l'essentiel d'abord :", "send": true },
+  "corrige":  { "label": "Corrige",  "prompt": "Corrige et améliore ce texte en gardant mon ton, puis liste ce que tu as changé :", "send": true },
+  "traduis":  { "label": "Traduis",  "prompt": "Traduis en anglais (ou en français si c'est déjà en anglais), avec un ton naturel :", "send": true },
+  "idees":    { "label": "Idées",    "prompt": "Propose-moi 5 idées originales à partir de ça :", "send": false },
+  "perso":    { "label": "Personnalisé", "prompt": "", "send": false }
+}

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Prompt IA</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; padding: 4px 10px 12px 0; background: #2d2d2d; color: #d8d8d8; font: 13px "Segoe UI", system-ui, sans-serif; }
+  .row { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0; }
+  .row > label:first-child { flex: 0 0 108px; text-align: right; padding-top: 5px; color: #b8b8b8; }
+  .field { flex: 1; min-width: 0; }
+  select, textarea, input[type=number] { width: 100%; box-sizing: border-box; background: #3d3d3d; color: #eee; border: 1px solid #4a4a4a; border-radius: 3px; padding: 4px 6px; font: inherit; }
+  textarea { min-height: 76px; resize: vertical; line-height: 1.35; }
+  select:focus, textarea:focus, input:focus { outline: 1px solid #8b7cf6; border-color: #8b7cf6; }
+  .check { display: flex; align-items: center; gap: 6px; padding-top: 4px; }
+  .hint { font-size: 11.5px; color: #9a9a9a; margin-top: 3px; line-height: 1.35; }
+  .sep { height: 1px; background: #3a3a3a; margin: 10px 0 8px 118px; }
+</style>
+</head>
+<body>
+  <div class="row"><label for="preset">Modèle</label>
+    <div class="field"><select id="preset"></select></div></div>
+  <div class="row"><label for="prompt">Prompt</label>
+    <div class="field"><textarea id="prompt" spellcheck="true"></textarea>
+    <div class="hint">Le texte récupéré est ajouté en dessous, après une ligne vide.</div></div></div>
+  <div class="sep"></div>
+  <div class="row"><label for="source">Texte envoyé</label>
+    <div class="field"><select id="source">
+      <option value="selection">Sélection (copiée automatiquement)</option>
+      <option value="clipboard">Presse-papiers actuel</option>
+      <option value="none">Aucun (prompt seul)</option>
+    </select></div></div>
+  <div class="row" id="fallbackRow"><label for="fallback">Si rien n'est sélectionné</label>
+    <div class="field"><select id="fallback">
+      <option value="none">Ouvrir le prompt seul, sans envoyer</option>
+      <option value="clipboard">Utiliser le presse-papiers actuel</option>
+    </select></div></div>
+  <div class="row"><label for="target">Ouvrir dans</label>
+    <div class="field"><select id="target">
+      <option value="app">App Claude</option>
+      <option value="web">claude.ai (navigateur)</option>
+      <option value="code">Claude Code (collage)</option>
+      <option value="chatgpt">ChatGPT (navigateur)</option>
+    </select></div></div>
+  <div class="row"><label for="longTarget">Appui long</label>
+    <div class="field"><select id="longTarget">
+      <option value="chatgpt">ChatGPT (navigateur)</option>
+      <option value="app">App Claude</option>
+      <option value="web">claude.ai (navigateur)</option>
+      <option value="code">Claude Code (collage)</option>
+      <option value="none">Rien</option>
+    </select>
+    <div class="hint">Même prompt, envoyé ailleurs quand tu gardes la touche enfoncée (½ seconde).</div></div></div>
+  <div class="row"><label></label>
+    <div class="field check"><input type="checkbox" id="send"><label for="send">Envoyer automatiquement</label></div></div>
+  <div class="sep"></div>
+  <div class="row"><label for="wait">Attente (ms)</label>
+    <div class="field"><input type="number" id="wait" min="100" max="8000" step="100" placeholder="auto">
+    <div class="hint">Après l'apparition de la fenêtre. Auto : 900 ms pour l'app, 2 500 ms dans le navigateur. Augmente si l'envoi part avant que la page soit prête.</div></div></div>
+  <div class="row"><label></label>
+    <div class="field check"><input type="checkbox" id="restore"><label for="restore">Remettre mon presse-papiers ensuite</label></div></div>
+
+<script>
+var PRESETS = {"explique":{"label":"Explique","prompt":"Explique-moi ça simplement, comme à un collègue :","send":false},"resume":{"label":"Résumé","prompt":"Résume ça en 5 points maximum, l'essentiel d'abord :","send":true},"corrige":{"label":"Corrige","prompt":"Corrige et améliore ce texte en gardant mon ton, puis liste ce que tu as changé :","send":true},"traduis":{"label":"Traduis","prompt":"Traduis en anglais (ou en français si c'est déjà en anglais), avec un ton naturel :","send":true},"idees":{"label":"Idées","prompt":"Propose-moi 5 idées originales à partir de ça :","send":false},"perso":{"label":"Personnalisé","prompt":"","send":false}};
+var ws = null, ctx = null, settings = {};
+var $ = function (id) { return document.getElementById(id); };
+
+function fill() {
+  var preset = settings.preset || 'explique';
+  var pre = PRESETS[preset] || PRESETS.explique;
+  $('preset').value = preset;
+  $('prompt').value = (typeof settings.prompt === 'string' && settings.prompt.trim()) ? settings.prompt : pre.prompt;
+  $('source').value = settings.source || 'selection';
+  $('fallback').value = settings.fallback || 'none';
+  $('target').value = settings.target || 'app';
+  $('longTarget').value = settings.longTarget || 'chatgpt';
+  $('send').checked = typeof settings.send === 'boolean' ? settings.send : pre.send;
+  $('wait').value = settings.wait || '';
+  $('restore').checked = settings.restore !== false;
+  $('fallbackRow').style.display = $('source').value === 'selection' ? '' : 'none';
+}
+function save() {
+  settings = {
+    preset: $('preset').value,
+    prompt: $('prompt').value,
+    source: $('source').value,
+    fallback: $('fallback').value,
+    target: $('target').value,
+    longTarget: $('longTarget').value,
+    send: $('send').checked,
+    wait: $('wait').value ? Number($('wait').value) : undefined,
+    restore: $('restore').checked
+  };
+  $('fallbackRow').style.display = settings.source === 'selection' ? '' : 'none';
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify({ event: 'setSettings', context: ctx, payload: settings }));
+}
+
+Object.keys(PRESETS).forEach(function (k) {
+  var o = document.createElement('option'); o.value = k; o.textContent = PRESETS[k].label; $('preset').appendChild(o);
+});
+$('preset').addEventListener('change', function () {
+  var pre = PRESETS[$('preset').value];
+  if ($('preset').value !== 'perso') { $('prompt').value = pre.prompt; $('send').checked = pre.send; }
+  save();
+});
+['prompt', 'wait'].forEach(function (id) { $(id).addEventListener('input', save); });
+['source', 'fallback', 'target', 'longTarget', 'send', 'restore'].forEach(function (id) { $(id).addEventListener('change', save); });
+
+window.connectElgatoStreamDeckSocket = function (port, uuid, registerEvent, info, actionInfo) {
+  ctx = uuid;
+  try { settings = JSON.parse(actionInfo).payload.settings || {}; } catch (e) { settings = {}; }
+  fill();
+  ws = new WebSocket('ws://127.0.0.1:' + port);
+  ws.onopen = function () { ws.send(JSON.stringify({ event: registerEvent, uuid: uuid })); };
+  ws.onmessage = function (m) {
+    var d = JSON.parse(m.data);
+    if (d.event === 'didReceiveSettings') { settings = d.payload.settings || {}; fill(); }
+  };
+};
+</script>
+</body>
+</html>
