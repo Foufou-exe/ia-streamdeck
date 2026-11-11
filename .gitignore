@@ -1,8 +1,8 @@
 # Dépendances et builds
 node_modules/
 dist/
-plugin/com.thibaut.profil-ia.sdPlugin/bin/
-plugin/com.thibaut.profil-ia.sdPlugin/logs/
+plugin/com.foufou-exe.profil-ia.sdPlugin/bin/
+plugin/com.foufou-exe.profil-ia.sdPlugin/logs/
 
 # Python
 __pycache__/

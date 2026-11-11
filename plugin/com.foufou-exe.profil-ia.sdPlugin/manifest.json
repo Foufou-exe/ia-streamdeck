@@ -2,7 +2,7 @@
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "UUID": "com.foufou-exe.profil-ia",
   "Name": "Profil IA",
-  "Version": "1.2.0.0",
+  "Version": "1.0.0.0",
   "Author": "Thibaut",
   "Description": "Touches « Prompt IA » configurables (Claude / ChatGPT) et molettes Stream Deck+ à grande barre dynamique.",
   "URL": "https://github.com/Foufou-exe/ia-streamdeck",

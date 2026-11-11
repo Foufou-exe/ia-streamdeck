@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  commits:
+    name: Messages de commit (Conventional Commits)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: wagoid/commitlint-github-action@b948419dd99f3fd78a6548d48f94e3df7f6bf3ed # v6.2.1
+        with:
+          configFile: .commitlintrc.json
+
+  plugin:
+    name: Plugin (lint, build, test, validation Elgato)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: plugin/package-lock.json
+      - run: npm ci
+      - name: ESLint
+        run: npm run lint
+      - name: Audit des dépendances d'exécution
+        run: npm audit --omit=dev --audit-level=high
+      - run: npm run build
+      - name: Fichiers générés à jour (manifest, layouts, ui)
+        run: |
+          if ! git diff --exit-code -- com.foufou-exe.profil-ia.sdPlugin; then
+            echo "::error::Les fichiers générés ne sont pas à jour : lance « npm run build » et commite le résultat."
+            exit 1
+          fi
+      - name: Test de bout en bout
+        run: npm test
+      - name: Validation du plugin (CLI Elgato)
+        run: npm run validate
+      - run: npm run pack
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: plugin
+          path: dist/*.streamDeckPlugin
+          if-no-files-found: error
+
+  powershell:
+    name: Helper PowerShell (PSScriptAnalyzer)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Syntaxe Windows PowerShell 5.1 (version utilisée par le plugin)
+        shell: powershell
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile("$PWD\plugin\src\helper.ps1", [ref]$null, [ref]$errors) | Out-Null
+          if ($errors) { $errors | ForEach-Object { Write-Output "::error file=plugin/src/helper.ps1,line=$($_.Extent.StartLineNumber)::$($_.Message)" }; exit 1 }
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Scope CurrentUser -Force
+          $issues = Invoke-ScriptAnalyzer -Path plugin/src/helper.ps1 -Severity Error, Warning
+          $issues | ForEach-Object { Write-Output "::error file=plugin/src/helper.ps1,line=$($_.Line)::[$($_.RuleName)] $($_.Message)" }
+          if ($issues) { exit 1 }
+
+  python:
+    name: Scripts Python (Ruff, build du profil)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/ruff-action@278981a28ce3188b1e39527901f38254bf3aac89 # v4.1.0
+        with:
+          version: 0.17.4
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - run: pip install "$(grep -i '^pillow' tools/requirements.txt)"
+      - name: Build du profil
+        run: python tools/build-profile.py --pack
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: profil
+          path: dist/*.streamDeckProfile
+          if-no-files-found: error
+
+  dependency-review:
+    name: Revue des dépendances
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          deny-licenses: GPL-3.0-only, GPL-3.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later

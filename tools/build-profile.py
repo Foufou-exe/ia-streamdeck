@@ -1,20 +1,24 @@
 """Construit le profil Stream Deck+ « Profil IA » (pages Claude + ChatGPT) à partir de profils/profil-ia.json.
 
-Usage : python tools/build-profile.py
+Usage : python tools/build-profile.py [--pack]
 Sortie : dist/<UUID>.sdProfile/  (dossier au format ProfilesV3 de Stream Deck)
+         dist/Profil-IA.streamDeckProfile  (archive importable, avec --pack)
 
 Pour l'installer à la main : quitter Stream Deck, copier le dossier dans
 %APPDATA%\\Elgato\\StreamDeck\\ProfilesV3\\ puis relancer Stream Deck.
 Le plus simple reste d'importer le fichier Profil-IA.streamDeckProfile publié dans les Releases.
 """
-import hashlib, json, pathlib, shutil, uuid
+import hashlib, json, pathlib, shutil, sys, uuid, zipfile
 from PIL import Image, ImageSequence
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "profils"
 NS = uuid.UUID("6f1c5e2a-0d3b-4c1e-9a77-3a5b2c1d0e9f")
 OUT = ROOT / "dist" / (str(uuid.uuid5(NS, "profil-ia")).upper() + ".sdProfile")
-PLUGIN = {"Name": "Profil IA", "UUID": "com.foufou-exe.profil-ia", "Version": "1.2.0.0"}
+ARCHIVE = ROOT / "dist" / "Profil-IA.streamDeckProfile"
+# version unique : celle du plugin (plugin/package.json), au format Stream Deck x.y.z.0
+VERSION = json.loads((ROOT / "plugin" / "package.json").read_text(encoding="utf-8"))["version"] + ".0"
+PLUGIN = {"Name": "Profil IA", "UUID": "com.foufou-exe.profil-ia", "Version": VERSION}
 
 def uid(*parts):
     return str(uuid.uuid5(NS, "/".join(parts)))
@@ -91,6 +95,18 @@ def main():
             "Pages": {"Current": page_ids[0], "Default": default_id, "Pages": page_ids}, "Version": "3.0"}
     (OUT / "manifest.json").write_text(json.dumps(root, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"profil généré : {OUT.relative_to(ROOT)} ({len(page_ids)} pages)")
+    if "--pack" in sys.argv:
+        pack()
+
+def pack():
+    """Archive zip contenant le dossier <UUID>.sdProfile, importable par double-clic."""
+    files = sorted(p for p in OUT.rglob("*") if p.is_file())
+    with zipfile.ZipFile(ARCHIVE, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+        for f in files:
+            info = zipfile.ZipInfo(f.relative_to(OUT.parent).as_posix(), date_time=(2026, 1, 1, 0, 0, 0))  # date fixe = archive reproductible
+            info.compress_type = zipfile.ZIP_DEFLATED
+            z.writestr(info, f.read_bytes())
+    print(f"archive {ARCHIVE.relative_to(ROOT)} ({len(files)} fichiers)")
 
 if __name__ == "__main__":
     main()

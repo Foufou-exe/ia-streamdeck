@@ -176,7 +176,7 @@ class Zoom extends Base {
 }
 
 const volumeInstances = new Set();
-let volState = { vol: null, muted: false, localAt: 0 };
+const volState = { vol: null, muted: false, localAt: 0 };
 let volPoll = null;
 helper.onVolume((vol, muted) => {
   // ignore echoes while the dial is being turned
@@ -313,12 +313,14 @@ class Prompt {
   }
 }
 
+// doit correspondre aux UUID d'actions du manifest (build.js)
+const PLUGIN_UUID = 'com.foufou-exe.profil-ia';
 const KINDS = {
-  'com.thibaut.profil-ia.prompt': Prompt,
-  'com.thibaut.profil-ia.defiler': Defiler,
-  'com.thibaut.profil-ia.zoom': Zoom,
-  'com.thibaut.profil-ia.volume': Volume,
-  'com.thibaut.profil-ia.dictee': Dictee,
+  [`${PLUGIN_UUID}.prompt`]: Prompt,
+  [`${PLUGIN_UUID}.defiler`]: Defiler,
+  [`${PLUGIN_UUID}.zoom`]: Zoom,
+  [`${PLUGIN_UUID}.volume`]: Volume,
+  [`${PLUGIN_UUID}.dictee`]: Dictee,
 };
 const instances = new Map();
 

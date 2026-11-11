@@ -107,7 +107,7 @@ function DoPrompt($id, $cfg) {
   $origFg = [ProfilIA.Win]::Fg()
   $origProc = [ProfilIA.Win]::FgProc()
   $backup = GetClipText
-  $hadText = ($backup -ne $null)
+  $hadText = ($null -ne $backup)
 
   # 1. recuperer le texte
   $sel = $null
@@ -194,7 +194,7 @@ function SayVol { Say ("vol " + [ProfilIA.Audio]::GetVolume() + " " + [int][Prof
 Say 'ready'
 while ($true) {
   $line = [Console]::In.ReadLine()
-  if ($line -eq $null) { break }
+  if ($null -eq $line) { break }
   $p = $line.Trim().Split(' ')
   try {
     switch ($p[0]) {

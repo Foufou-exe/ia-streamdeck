@@ -1,6 +1,6 @@
 {
   "name": "profil-ia-streamdeck-plugin",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Plugin Stream Deck « Profil IA » : touches Prompt IA (Claude / ChatGPT) et molettes Stream Deck+ à grande barre dynamique.",
   "homepage": "https://github.com/Foufou-exe/ia-streamdeck",
@@ -9,12 +9,17 @@
   "scripts": {
     "build": "node build.js",
     "pack": "node build.js --pack",
-    "test": "node test/run.js"
+    "test": "node test/run.js",
+    "lint": "eslint .",
+    "validate": "npx --yes @elgato/cli@1.10.4 validate com.foufou-exe.profil-ia.sdPlugin"
   },
   "dependencies": {
-    "ws": "8.18.0"
+    "ws": "8.22.2"
   },
   "devDependencies": {
-    "esbuild": "0.24.0"
+    "@eslint/js": "9.39.5",
+    "esbuild": "0.28.2",
+    "eslint": "9.39.5",
+    "globals": "17.14.0"
   }
 }
