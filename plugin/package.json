@@ -14,7 +14,7 @@
     "validate": "npx --yes @elgato/cli@1.10.4 validate com.foufou-exe.profil-ia.sdPlugin"
   },
   "dependencies": {
-    "ws": "8.22.2"
+    "ws": "8.23.0"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
